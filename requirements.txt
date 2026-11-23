@@ -1,0 +1,9 @@
+# Python 3.11 (64-bit) on Windows 10/11 is recommended.
+PySide6>=6.6
+# "headless" avoids Qt plugin clashes between OpenCV and PySide6; webcam capture still works.
+opencv-python-headless>=4.8
+numpy>=1.26,<2
+Pillow>=10.0
+# TFLite runtime. On Windows the official TensorFlow wheel is the most reliable choice.
+# core/model.py also auto-uses ai-edge-litert or tflite-runtime if you install those instead.
+tensorflow==2.16.2

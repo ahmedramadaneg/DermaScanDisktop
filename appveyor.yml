@@ -1,0 +1,27 @@
+version: 1.0.{build}
+image: Visual Studio 2022          # Windows Server image with Python 3.11 preinstalled
+
+environment:
+  PYTHON: "C:\\Python311-x64"
+
+install:
+  - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - python --version
+  - python -m pip install --upgrade pip
+  - pip install -r requirements.txt pyinstaller
+
+# Sanity check: load the model + labels and classify a generated image (no GUI/camera needed).
+test_script:
+  - python -c "from PIL import Image; Image.new('RGB',(300,300),(200,150,140)).save('ci_test.png')"
+  - python main.py --selftest ci_test.png
+
+build_script:
+  - pyinstaller --noconfirm --clean DermaScan.spec
+
+after_build:
+  - xcopy /E /I /Y assets dist\DermaScanDesktop\assets
+  - 7z a DermaScanDesktop-win64.zip .\dist\DermaScanDesktop\
+
+artifacts:
+  - path: DermaScanDesktop-win64.zip
+    name: DermaScanDesktop
